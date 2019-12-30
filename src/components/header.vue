@@ -1,6 +1,6 @@
 <template>
   <div class="v-header">
-    Header
+    <slot></slot>
   </div>
 </template>
 <script>
