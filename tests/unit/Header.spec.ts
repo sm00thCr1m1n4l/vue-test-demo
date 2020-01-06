@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
-import Header from '@/components/Header.vue'
-
+import Header from '@/components/header.vue'
+import { expect } from 'chai'
 describe('HelloWorld.vue', () => {
   it('默认slot', () => {
     const wrapper = shallowMount(Header, {
@@ -8,6 +8,6 @@ describe('HelloWorld.vue', () => {
         default: 'header slot'
       }
     })
-    expect(wrapper.text()).toMatch('header slot')
+    expect(wrapper.text()).equal('header slot')
   })
 })

@@ -8,7 +8,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 let sourceFileDir = [
   ...glob.sync(path.resolve(__dirname, './src/**/*.*'))
-].filter(i => {
+].filter(i => { // 遍历src下的所有文件，过滤出需要打包的部分
   const ext = path.extname(i)
   return ['.js', '.ts', '.tsx', '.vue', '.tsx'].includes(ext) && !(/\.d\.ts$/g.test(i))
 })
@@ -18,17 +18,19 @@ const externals = [
   {},
   nodeExternals(),
   (context, request, callback) => {
+    // babel和tslib相关的依赖提取到组件库外部
     if (/core-js|corejs|tslib/g.test(request)) {
       return callback(null, 'commonjs ' + request)
     }
+    // 库内部依赖间使用@/xxx引用，将打包后文件引用组件库其他部分的代码抽离出来
     if (/^@\/.*/g.test(request)) {
-      // 库内部依赖间使用@/xxx引用，将打包后文件引用组件库其他部分的代码抽离出来
       return callback(null, `commonjs ${name}/dist/${request.replace('@/', '').replace(/\.(ts|js|jsx|tsx|vue)$/g, '.js')}`)
     }
     callback()
   }
   // ...componentsDir
 ]
+// 将package.json中的依赖提取到组件库外部
 Object.keys({ ...peerDependencies, ...devDependencies, ...dependencies }).forEach((d) => {
   externals[0][d] = {
     commonjs: d,
@@ -37,6 +39,7 @@ Object.keys({ ...peerDependencies, ...devDependencies, ...dependencies }).forEac
   }
 })
 const entry = {}
+// 将src下的每个文件单独打包
 sourceFileDir.forEach(dir => {
   const chunkName = dir.replace(srcDir, '').replace(/^\//, '').replace(/\..*$/, '')
   entry[chunkName] = dir
@@ -51,7 +54,7 @@ module.exports = {
   },
   module: {
     rules: [
-      // ... 其它规则
+      // 各种文件的loader配置
       {
         test: /\.tsx?$/,
         loader: [
@@ -109,7 +112,7 @@ module.exports = {
             options: {
               importLoaders: 1
             }
-          }, // 将 CSS 转化成 CommonJS 模块
+          },
           {
             loader: 'postcss-loader',
             options: {
@@ -127,21 +130,20 @@ module.exports = {
             options: {
               importLoaders: 2
             }
-          }, // 将 CSS 转化成 CommonJS 模块
+          },
           {
             loader: 'postcss-loader',
             options: {
               sourceMap: false
             }
           },
-          'sass-loader' // 将 Sass 编译成 CSS，默认使用 Node Sass
+          'sass-loader'
         ]
       }
 
     ]
   },
   plugins: [
-    // 请确保引入这个插件！
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin()
   ],

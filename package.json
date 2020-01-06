@@ -5,11 +5,12 @@
   "scripts": {
     "serve": "cross-env ENV=development vue-cli-service serve",
     "build": "yarn run rimraf ./dist && cross-env ENV=production yarn run dist",
-    "test:unit": "vue-cli-service test:unit --coverage",
+    "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "commit": "git-cz",
     "dist": " yarn run webpack-cli --config ./webpack.components.js",
+    "version": "standard-version",
     "watch": "yarn run rimraf ./dist && cross-env ENV=watch yarn run dist"
   },
   "dependencies": {
@@ -20,15 +21,14 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.5",
-    "@types/jest": "^24.0.19",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-e2e-cypress": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",
     "@vue/cli-plugin-typescript": "^4.1.0",
-    "@vue/cli-plugin-unit-jest": "^4.1.2",
+    "@vue/cli-plugin-unit-mocha": "^4.1.2",
     "@vue/cli-plugin-vuex": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
     "@vue/eslint-config-standard": "^4.0.0",
@@ -45,6 +45,7 @@
     "rimraf": "^3.0.0",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
+    "standard-version": "^7.0.1",
     "ttypescript": "^1.5.8",
     "typescript": "^3.7.4",
     "typescript-transform-paths": "^1.1.13",
