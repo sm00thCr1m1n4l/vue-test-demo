@@ -19,6 +19,7 @@ module.exports = ({ style = true } = {}) => {
     libraryDirectory: 'dist/components',
     camel2DashComponentName: false,
     customName: (name, file) => {
+      // 依次匹配components、directivies下的文件
       let fileName = path.join(modulePath, `./dist/components/${dasherize(name)}.js`)
       if (fs.existsSync(fileName)) {
         return fileName.replace(modulePath, pkgJSON.name)
